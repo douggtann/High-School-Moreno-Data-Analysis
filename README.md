@@ -1,1 +1,5 @@
 # High-School-Moreno-Data-Analysis
+For this project, we decided to analyze the relationships in the forms of communities using the data set created by Jacob Moreno of the friendships between boys within a certain high school. By analyzing the data set using community detection and looking at the degrees, our goal is to see if we are able to analyze this older data set as well as reach a conclusion about the relationships between these boys at this specific high school.]
+[The data that will used for this project is collected by Jacob L. Moreno. This data set is a network data set that contains the friendships between boys in a certain high school in Illinois, United States. Each boy was asked twice for the creation of this data set, once in the Fall of 1957 and once in the Spring of 1958. This data set combines the results from both dates. A node in this data set represents a boy and an edge in this data set represents friendship. There is a total number of 70 components in this data set.
+
+Link to access the dataset: https://networkrepository.com/soc-highschool-moreno.php.
