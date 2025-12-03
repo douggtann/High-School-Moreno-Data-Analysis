@@ -1,0 +1,102 @@
+---
+title: "High School Moreno Data Analysis"
+author: "Jingxin Huang and Douglas Tan, University of Washington Bothell"
+output:
+  word_document:
+    toc: yes
+    toc_depth: '5'
+  html_document:
+    toc: yes
+    toc_depth: '5'
+    df_print: paged
+  pdf_document:
+    toc: yes
+    toc_depth: '5'
+---
+
+# Narrative Summary
+[For this project, we decided to analyze the relationships in the forms of communities using the data set created by Jacob Moreno of the friendships between boys within a certain high school. By analyzing the data set using community detection and looking at the degrees, our goal is to see if we are able to analyze this older data set as well as reach a conclusion about the relationships between these boys at this specific high school.]
+[The data that will used for this project is collected by Jacob L. Moreno. This data set is a network data set that contains the friendships between boys in a certain high school in Illinois, United States. Each boy was asked twice for the creation of this data set, once in the Fall of 1957 and once in the Spring of 1958. This data set combines the results from both dates. A node in this data set represents a boy and an edge in this data set represents friendship. There is a total number of 70 components in this data set.
+
+Link to access:https://networkrepository.com/soc-highschool-moreno.php.]
+
+# Setup Code
+```{r}
+library(igraph) # loading igraph package
+#reading in required data:
+highschool.moreno <- read.table("highschool-moreno.txt", header = 1)
+highschool <- graph_from_data_frame(highschool.moreno, directed = T)
+
+#betweenness of graph
+between <- betweenness(highschool, directed = T, normalized=F)
+bet_normalized <- betweenness(highschool, directed=T, normalized=T)
+bet.dat <- data.frame(between, bet_normalized)
+
+#Edge betweenness community detection
+gv <- cluster_edge_betweenness(highschool)
+
+#Degrees
+highschool.degree <- degree(highschool, mode = "total")
+highschool.indegree <- degree(highschool, mode = "in")
+highschool.outdegree <- degree(highschool, mode = "out")
+dat <- data.frame(highschool.degree, highschool.indegree, highschool.outdegree)
+```
+
+
+# Network Plots
+## Regular Plot & Community Detection
+```{r}
+par(mfrow=c(1,2))
+#regular plot of the moreno data
+set.seed(2022)
+plot(highschool, vertex.label.color = "black", vertex.color = "yellow", edge.arrow.size=.3,
+     main="Moreno Friendship Network")
+#betweenness plot of the moreno data
+set.seed(2022)
+plot(gv,highschool, vertex.label.color="black",vertex.size=13, edge.arrow.size=.3,
+     main="Community Detection")
+```
+## Dendrogram
+```{r}
+dendPlot(gv, mode="hclust")
+```
+
+## Centrality Plot
+```{r}
+par(mfrow=c(1,3))
+#total degree plot
+set.seed(2022)
+plot(highschool, edge.arrow.size=.2, vertex.label=NA, vertex.color="tomato",
+     vertex.size=highschool.degree,main="Total Degree")
+#in-degree plot
+set.seed(2022)
+plot(highschool, edge.arrow.size=.2, vertex.label=NA, vertex.color="tomato",
+     vertex.size=highschool.indegree, main="In-Degree")
+#out-degree plot
+set.seed(2022)
+plot(highschool, edge.arrow.size=.2, vertex.label=NA, vertex.color="tomato",
+     vertex.size=highschool.outdegree, main="Out-Degree")
+```
+
+# Analysis
+## Centrality
+```{r}
+highschool.indegree
+```
+## Edge Betweenness
+```{r}
+modularity(gv)
+```
+```{r}
+length(gv)
+```
+```{r}
+membership(gv)
+```
+```{r}
+sizes(gv)
+```
+[Using the in-degree of this network plot, we find that number 28 and 46 were the most interconnected with the other boys at this particular high school. They had the most connections out of all the other 70 boys at this schools. Three of the boys had no connections at this school, meaning they had no one to call as their friend at this high school. From our subgroup detection, we see that there were various groups at this high school being 34 different types of communities. This means that almost everyone had participated in some sort of a community besides one person. This shows that a high percentage of those who went to this school were still interconnected with each other in some sort of way.]
+
+# Conclusion
+[A major takeaway from this project is how basic network analysis can still be applied to old data such as this data set. Despite newer and more efficient ways to analyze data, network analytic skills can still be applied to older data sets as long as there is some sort of relationship between the data. From our findings, we can see that in this high school, most boys are well connected with each other, with only one being not as connected as the rest. A majority of the boys knew each other or felt like they had at least one friend at their school.]
